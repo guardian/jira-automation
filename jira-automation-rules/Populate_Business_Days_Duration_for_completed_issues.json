@@ -1,0 +1,167 @@
+{
+  "cloud": true,
+  "rules": [
+    {
+      "id": 17122370,
+      "clientKey": "jira:a7d102c1-a7cf-4320-85c3-ee90bfc62f47",
+      "name": "Populate Business Days Duration for completed issues",
+      "state": "ENABLED",
+      "description": "Automatically populate Business Days Duration for \"Done\" tasks when the date for start date/due date is modified. (The due date is set automatically when an issue is marked as Done), which should trigger this",
+      "authorAccountId": "63441e6894b0b26083062e6c",
+      "actor": {
+        "type": "ACCOUNT_ID",
+        "value": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+      },
+      "created": 1703699279789,
+      "updated": 1703848773200,
+      "trigger": {
+        "id": "377157204",
+        "component": "TRIGGER",
+        "parentId": null,
+        "conditionParentId": null,
+        "schemaVersion": 2,
+        "type": "jira.issue.field.changed",
+        "value": {
+          "changeType": "ANY_CHANGE",
+          "fields": [
+            {
+              "value": "duedate",
+              "type": "field"
+            },
+            {
+              "value": "Start date",
+              "type": "fieldName"
+            }
+          ],
+          "actions": [
+            "edit"
+          ]
+        },
+        "children": [],
+        "conditions": [],
+        "connectionId": null
+      },
+      "components": [
+        {
+          "id": "377157207",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "ID",
+              "value": "status"
+            },
+            "selectedFieldType": "status",
+            "comparison": "EQUALS",
+            "compareValue": {
+              "type": "NAME",
+              "modifier": null,
+              "value": "Done",
+              "multiValue": false,
+              "source": null
+            }
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377157209",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "ID",
+              "value": "duedate"
+            },
+            "selectedFieldType": "duedate",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377157210",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Start date"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:datepicker",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377157211",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 10,
+          "type": "jira.issue.edit",
+          "value": {
+            "operations": [
+              {
+                "field": {
+                  "type": "NAME",
+                  "value": "Business Days Duration"
+                },
+                "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                "type": "SET",
+                "value": "{{issue.\"Start date\".diff(issue.duedate).businessDays}}"
+              }
+            ],
+            "advancedFields": null,
+            "sendNotifications": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        }
+      ],
+      "canOtherRuleTrigger": true,
+      "notifyOnError": "FIRSTERROR",
+      "projects": [],
+      "labels": [],
+      "tags": [
+        {
+          "id": 53709593,
+          "tagType": "IS_RULE_UPDATED",
+          "tagValue": "true"
+        }
+      ],
+      "ruleScope": {
+        "resources": [
+          "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        ]
+      },
+      "ruleHome": {
+        "ruleLifecycleHome": {
+          "locationARI": "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        },
+        "ruleBillingHome": {
+          "locationARI": "ari:cloud:jira-software::site/75b61526-edee-42e5-a80e-b1e0a2a4a67e"
+        }
+      },
+      "writeAccessType": "UNRESTRICTED",
+      "collaborators": [],
+      "billingType": "NORMAL"
+    }
+  ]
+}

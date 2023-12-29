@@ -1,0 +1,433 @@
+{
+  "cloud": true,
+  "rules": [
+    {
+      "id": 17120513,
+      "clientKey": "jira:a7d102c1-a7cf-4320-85c3-ee90bfc62f47",
+      "name": "Generate Severity Score for bugs",
+      "state": "ENABLED",
+      "description": "Automatically populate the Severity Score field when all other bug information fields have been populated, either on ticket creation or update",
+      "authorAccountId": "63441e6894b0b26083062e6c",
+      "actor": {
+        "type": "ACCOUNT_ID",
+        "value": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+      },
+      "created": 1703690401318,
+      "updated": 1703850059191,
+      "trigger": {
+        "id": "377161431",
+        "component": "TRIGGER",
+        "parentId": null,
+        "conditionParentId": null,
+        "schemaVersion": 2,
+        "type": "jira.issue.field.changed",
+        "value": {
+          "changeType": "ANY_CHANGE",
+          "fields": [
+            {
+              "value": "Bug affected user percentage",
+              "type": "fieldName"
+            },
+            {
+              "value": "Bug feature prominence",
+              "type": "fieldName"
+            },
+            {
+              "value": "Bug financial implication",
+              "type": "fieldName"
+            },
+            {
+              "value": "Bug usability impact",
+              "type": "fieldName"
+            }
+          ],
+          "actions": [
+            "create",
+            "edit"
+          ]
+        },
+        "children": [],
+        "conditions": [],
+        "connectionId": null
+      },
+      "components": [
+        {
+          "id": "377161432",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Bug affected user percentage"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161433",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Bug feature prominence"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161434",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Bug financial implication"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            "comparison": "NOT_EMPTY",
+            "compareValue": {
+              "type": "FIELD",
+              "modifier": null,
+              "value": "",
+              "multiValue": false,
+              "source": "current"
+            }
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161435",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Bug usability impact"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161436",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.mapping-variable",
+          "value": {
+            "name": {
+              "type": "FREE",
+              "value": "featureProminenceMultiplierValues"
+            },
+            "mappings": [
+              {
+                "key": "Core feature",
+                "value": "1"
+              },
+              {
+                "key": "Important but not core",
+                "value": "0.8"
+              },
+              {
+                "key": "Infrequently used or niche feature",
+                "value": "0.5"
+              }
+            ]
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161437",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.mapping-variable",
+          "value": {
+            "name": {
+              "type": "FREE",
+              "value": "usabilityImpactMultiplierValues"
+            },
+            "mappings": [
+              {
+                "key": "cannot access content or use the feature",
+                "value": "1.2"
+              },
+              {
+                "key": "some loss of functionality, but there is a workaround",
+                "value": "0.7"
+              },
+              {
+                "key": "purely superficial",
+                "value": "0.4"
+              }
+            ]
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161438",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.mapping-variable",
+          "value": {
+            "name": {
+              "type": "FREE",
+              "value": "financialImpactMultiplierValues"
+            },
+            "mappings": [
+              {
+                "key": "Large and direct impact, affecting ads or subscription sign-up",
+                "value": "1.5"
+              },
+              {
+                "key": "Indirect or small (eg. premium feature)",
+                "value": "1"
+              },
+              {
+                "key": "No or little impact",
+                "value": "0.6"
+              }
+            ]
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161439",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "codebarrel.action.log",
+          "value": "affected user percentage: {{issue.\"Bug affected user percentage\"}}, feature prominence: {{issue.Bug feature prominence}}, usability impact: {{issue.Bug usability impact}}, financial implication: {{issue.Bug financial implication}}, ",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161440",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703694604183",
+            "name": {
+              "type": "FREE",
+              "value": "usersAffectedMultiplier"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{#math}}1.4 * {{issue.Bug affected user percentage}}{{/}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161441",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703693866289",
+            "name": {
+              "type": "FREE",
+              "value": "prominenceMultiplier"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{featureProminenceMultiplierValues.get(issue.Bug feature prominence)}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161442",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703693994817",
+            "name": {
+              "type": "FREE",
+              "value": "usabilityMultiplier"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{usabilityImpactMultiplierValues.get(issue.Bug usability impact)}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161443",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703694432758",
+            "name": {
+              "type": "FREE",
+              "value": "financialMultiplier"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{financialImpactMultiplierValues.get(issue.Bug financial implication)}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161444",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "codebarrel.action.log",
+          "value": "prominenceMultiplier: {{prominenceMultiplier}}, usabilityMultiplier: {{usabilityMultiplier}}, financialMultiplier: {{financialMultiplier}}, usersAffectedMultiplier: {{usersAffectedMultiplier}}",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161445",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703695132621",
+            "name": {
+              "type": "FREE",
+              "value": "severityScore"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{#math}}{{usersAffectedMultiplier}} * {{prominenceMultiplier}} * {{usabilityMultiplier}} * {{financialMultiplier}}{{/}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161446",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 10,
+          "type": "jira.issue.edit",
+          "value": {
+            "operations": [
+              {
+                "field": {
+                  "type": "NAME",
+                  "value": "Severity Score"
+                },
+                "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                "type": "SET",
+                "value": "{{#math}}ROUND({{severityScore}}, 0){{/}}"
+              }
+            ],
+            "advancedFields": null,
+            "sendNotifications": true
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        }
+      ],
+      "canOtherRuleTrigger": false,
+      "notifyOnError": "FIRSTERROR",
+      "projects": [],
+      "labels": [],
+      "tags": [
+        {
+          "id": 53710155,
+          "tagType": "IS_RULE_UPDATED",
+          "tagValue": "true"
+        }
+      ],
+      "ruleScope": {
+        "resources": [
+          "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        ]
+      },
+      "ruleHome": {
+        "ruleLifecycleHome": {
+          "locationARI": "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        },
+        "ruleBillingHome": {
+          "locationARI": "ari:cloud:jira-software::site/75b61526-edee-42e5-a80e-b1e0a2a4a67e"
+        }
+      },
+      "writeAccessType": "UNRESTRICTED",
+      "collaborators": [],
+      "billingType": "NORMAL"
+    }
+  ]
+}

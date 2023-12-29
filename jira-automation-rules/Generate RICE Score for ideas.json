@@ -1,0 +1,381 @@
+{
+  "cloud": true,
+  "rules": [
+    {
+      "id": 17129510,
+      "clientKey": "jira:a7d102c1-a7cf-4320-85c3-ee90bfc62f47",
+      "name": "Generate RICE Score for ideas",
+      "state": "ENABLED",
+      "description": "Automatically populate the RICE Score field when all other idea information fields have been populated, either on ticket creation or update",
+      "authorAccountId": "63441e6894b0b26083062e6c",
+      "actor": {
+        "type": "ACCOUNT_ID",
+        "value": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+      },
+      "created": 1703762979490,
+      "updated": 1703850050540,
+      "trigger": {
+        "id": "377161367",
+        "component": "TRIGGER",
+        "parentId": null,
+        "conditionParentId": null,
+        "schemaVersion": 2,
+        "type": "jira.issue.field.changed",
+        "value": {
+          "changeType": "ANY_CHANGE",
+          "fields": [
+            {
+              "value": "Idea confidence percentage",
+              "type": "fieldName"
+            },
+            {
+              "value": "Idea effort in weeks",
+              "type": "fieldName"
+            },
+            {
+              "value": "Idea Impact",
+              "type": "fieldName"
+            },
+            {
+              "value": "Idea Reach",
+              "type": "fieldName"
+            }
+          ],
+          "actions": [
+            "create",
+            "edit"
+          ]
+        },
+        "children": [],
+        "conditions": [],
+        "connectionId": null
+      },
+      "components": [
+        {
+          "id": "377161368",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Idea confidence percentage"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161369",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Idea effort in weeks"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161370",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Idea Impact"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161371",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "NAME",
+              "value": "Idea Reach"
+            },
+            "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+            "comparison": "NOT_EMPTY",
+            "compareValue": null
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161372",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.mapping-variable",
+          "value": {
+            "name": {
+              "type": "FREE",
+              "value": "impactMultiplierValues"
+            },
+            "mappings": [
+              {
+                "key": "Small",
+                "value": "0.5"
+              },
+              {
+                "key": "Medium",
+                "value": "1"
+              },
+              {
+                "key": "Large",
+                "value": "2"
+              },
+              {
+                "key": "Very Large",
+                "value": "4"
+              }
+            ]
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161373",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "codebarrel.action.log",
+          "value": "Idea confidence percentage: {{issue.\"Idea confidence percentage\"}}, Idea effort in weeks: {{issue.Idea effort in weeks}}, idea impact: {{issue.Idea Impact}}, Idea Reach: {{issue.Idea Reach}}",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161374",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703694604183",
+            "name": {
+              "type": "FREE",
+              "value": "reach"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{issue.Idea Reach}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161375",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703693866289",
+            "name": {
+              "type": "FREE",
+              "value": "impact"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{impactMultiplierValues.get(issue.Idea Impact)}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161376",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703693994817",
+            "name": {
+              "type": "FREE",
+              "value": "confidence"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{#math}}{{issue.Idea confidence percentage}} / 100{{/}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161377",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703694432758",
+            "name": {
+              "type": "FREE",
+              "value": "effort"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{#math}} 1 / {{issue.Idea effort in weeks}} * 2{{/}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161378",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "codebarrel.action.log",
+          "value": "reach: {{reach}}, impact: {{impact}}, effort: {{effort}}, confidence: {{confidence}}",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161379",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703695132621",
+            "name": {
+              "type": "FREE",
+              "value": "RICE"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "{{#math}}ROUND({{reach}} * {{impact}} * {{confidence}} * {{effort}}, 0){{/}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161380",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "codebarrel.action.log",
+          "value": "RICE: {{RICE}}",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377161381",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 10,
+          "type": "jira.issue.edit",
+          "value": {
+            "operations": [
+              {
+                "field": {
+                  "type": "NAME",
+                  "value": "Rice Score"
+                },
+                "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                "type": "SET",
+                "value": "{{RICE}}"
+              }
+            ],
+            "advancedFields": null,
+            "sendNotifications": true
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        }
+      ],
+      "canOtherRuleTrigger": false,
+      "notifyOnError": "FIRSTERROR",
+      "projects": [],
+      "labels": [],
+      "tags": [
+        {
+          "id": 53710152,
+          "tagType": "IS_RULE_UPDATED",
+          "tagValue": "true"
+        }
+      ],
+      "ruleScope": {
+        "resources": [
+          "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        ]
+      },
+      "ruleHome": {
+        "ruleLifecycleHome": {
+          "locationARI": "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        },
+        "ruleBillingHome": {
+          "locationARI": "ari:cloud:jira-software::site/75b61526-edee-42e5-a80e-b1e0a2a4a67e"
+        }
+      },
+      "writeAccessType": "UNRESTRICTED",
+      "collaborators": [],
+      "billingType": "NORMAL"
+    }
+  ]
+}

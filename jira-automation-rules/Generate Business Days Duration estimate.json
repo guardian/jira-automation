@@ -1,0 +1,316 @@
+{
+  "cloud": true,
+  "rules": [
+    {
+      "id": 17132802,
+      "clientKey": "jira:a7d102c1-a7cf-4320-85c3-ee90bfc62f47",
+      "name": "Generate Business Days Duration estimate",
+      "state": "ENABLED",
+      "description": "Generate an estimate for Business Days Duration, using average of previously completed matching issues.",
+      "authorAccountId": "63441e6894b0b26083062e6c",
+      "actor": {
+        "type": "ACCOUNT_ID",
+        "value": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+      },
+      "created": 1703783229195,
+      "updated": 1703864773721,
+      "trigger": {
+        "id": "377228048",
+        "component": "TRIGGER",
+        "parentId": null,
+        "conditionParentId": null,
+        "schemaVersion": 1,
+        "type": "jira.issue.event.trigger:created",
+        "value": {
+          "eventKey": "jira:issue_created",
+          "issueEvent": "issue_created"
+        },
+        "children": [],
+        "conditions": [],
+        "connectionId": null
+      },
+      "components": [
+        {
+          "id": "377228049",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "ID",
+              "value": "issuetype"
+            },
+            "selectedFieldType": "issuetype",
+            "comparison": "ONE_OF",
+            "compareValue": {
+              "type": "ID",
+              "modifier": null,
+              "value": "[\"1\",\"3\"]",
+              "multiValue": true,
+              "source": null
+            }
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377228050",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.issues.related.condition",
+          "value": {
+            "relatedType": "parent",
+            "linkTypes": [],
+            "operator": "present",
+            "relatedJql": "",
+            "compareJql": "",
+            "compareValue": 0,
+            "similarityLimit": 40,
+            "jql": ""
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377228051",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.jql.condition",
+          "value": "((component = iOS and component NOT IN (Android, \"Mobile Server Side\"))  OR  (component = Android and component NOT IN (iOS, \"Mobile Server Side\"))  OR  (component = \"Mobile Server Side\" and component NOT IN (Android, iOS)) )",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377228052",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.create.variable",
+          "value": {
+            "id": "_customsmartvalue_id_1703778333988",
+            "name": {
+              "type": "FREE",
+              "value": "jqlForPriorCompletedIssues"
+            },
+            "type": "SMART",
+            "query": {
+              "type": "SMART",
+              "value": "project = \"LIVE\" and type = {{issue.issueType.name}} and status = Done and component = \"{{issue.components.name}}\" and parent = \"{{issue.Parent}}\" and \"Business Days Duration[Number]\" is not EMPTY ORDER BY due DESC"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377228053",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "codebarrel.action.log",
+          "value": "JQL for prior issues: {{jqlForPriorCompletedIssues}}",
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377228054",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.lookup.issues",
+          "value": {
+            "id": "_customsmartvalue_id_1703774238082",
+            "name": {
+              "type": "FREE",
+              "value": "lookupIssues"
+            },
+            "type": "JQL",
+            "query": {
+              "type": "SMART",
+              "value": "{{jqlForPriorCompletedIssues}}"
+            },
+            "lazy": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377228055",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.condition.container.block",
+          "value": null,
+          "children": [
+            {
+              "id": "377228056",
+              "component": "CONDITION_BLOCK",
+              "parentId": "377228055",
+              "conditionParentId": null,
+              "schemaVersion": 1,
+              "type": "jira.condition.if.block",
+              "value": {
+                "conditionMatchType": "ALL"
+              },
+              "children": [
+                {
+                  "id": "377228058",
+                  "component": "ACTION",
+                  "parentId": "377228056",
+                  "conditionParentId": null,
+                  "schemaVersion": 1,
+                  "type": "jira.create.variable",
+                  "value": {
+                    "id": "_customsmartvalue_id_1703778686261",
+                    "name": {
+                      "type": "FREE",
+                      "value": "estimate"
+                    },
+                    "type": "SMART",
+                    "query": {
+                      "type": "SMART",
+                      "value": "{{#math}}ROUND({{lookupIssues.Business Days Duration.average}}, 1){{/}}"
+                    },
+                    "lazy": false
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                },
+                {
+                  "id": "377228059",
+                  "component": "ACTION",
+                  "parentId": "377228056",
+                  "conditionParentId": null,
+                  "schemaVersion": 1,
+                  "type": "codebarrel.action.log",
+                  "value": "Estimate: {{estimate}}",
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                },
+                {
+                  "id": "377228060",
+                  "component": "ACTION",
+                  "parentId": "377228056",
+                  "conditionParentId": null,
+                  "schemaVersion": 10,
+                  "type": "jira.issue.edit",
+                  "value": {
+                    "operations": [
+                      {
+                        "field": {
+                          "type": "NAME",
+                          "value": "Business Days Duration"
+                        },
+                        "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                        "type": "SET",
+                        "value": "{{estimate}}"
+                      }
+                    ],
+                    "advancedFields": null,
+                    "sendNotifications": true
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                }
+              ],
+              "conditions": [
+                {
+                  "id": "377228057",
+                  "component": "CONDITION",
+                  "parentId": null,
+                  "conditionParentId": "377228056",
+                  "schemaVersion": 1,
+                  "type": "jira.comparator.condition",
+                  "value": {
+                    "first": "{{lookupIssues.Business Days Duration.size}}",
+                    "second": "0",
+                    "operator": "GREATER_THAN"
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                }
+              ],
+              "connectionId": null
+            },
+            {
+              "id": "377228061",
+              "component": "CONDITION_BLOCK",
+              "parentId": "377228055",
+              "conditionParentId": null,
+              "schemaVersion": 1,
+              "type": "jira.condition.if.block",
+              "value": {
+                "conditionMatchType": "ALL"
+              },
+              "children": [
+                {
+                  "id": "377228062",
+                  "component": "ACTION",
+                  "parentId": "377228061",
+                  "conditionParentId": null,
+                  "schemaVersion": 1,
+                  "type": "codebarrel.action.log",
+                  "value": "Didn't have any prior completed issues to generate an estimate from",
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                }
+              ],
+              "conditions": [],
+              "connectionId": null
+            }
+          ],
+          "conditions": [],
+          "connectionId": null
+        }
+      ],
+      "canOtherRuleTrigger": false,
+      "notifyOnError": "FIRSTERROR",
+      "projects": [],
+      "labels": [],
+      "tags": [
+        {
+          "id": 53717973,
+          "tagType": "IS_RULE_UPDATED",
+          "tagValue": "true"
+        }
+      ],
+      "ruleScope": {
+        "resources": [
+          "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        ]
+      },
+      "ruleHome": {
+        "ruleLifecycleHome": {
+          "locationARI": "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        },
+        "ruleBillingHome": {
+          "locationARI": "ari:cloud:jira-software::site/75b61526-edee-42e5-a80e-b1e0a2a4a67e"
+        }
+      },
+      "writeAccessType": "UNRESTRICTED",
+      "collaborators": [],
+      "billingType": "NORMAL"
+    }
+  ]
+}

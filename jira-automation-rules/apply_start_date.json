@@ -1,0 +1,139 @@
+{
+  "cloud": true,
+  "rules": [
+    {
+      "id": 15759676,
+      "clientKey": "jira:a7d102c1-a7cf-4320-85c3-ee90bfc62f47",
+      "name": "Apply Start Date",
+      "state": "ENABLED",
+      "description": "Start date should be the first date we started a task. We should populate this field for the future, to predict when we will start it, but when we actually start it, this field will be overridden by this automation to the true date of when we first started",
+      "authorAccountId": "63441e6894b0b26083062e6c",
+      "actor": {
+        "type": "ACCOUNT_ID",
+        "value": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+      },
+      "created": 1698269903039,
+      "updated": 1703851973658,
+      "trigger": {
+        "id": "377167356",
+        "component": "TRIGGER",
+        "parentId": null,
+        "conditionParentId": null,
+        "schemaVersion": 1,
+        "type": "jira.issue.event.trigger:transitioned",
+        "value": {
+          "eventKey": "jira:issue_updated",
+          "issueEvent": "issue_generic",
+          "fromStatus": [
+            {
+              "type": "NAME",
+              "value": "BUGS"
+            },
+            {
+              "type": "NAME",
+              "value": "Backlog"
+            },
+            {
+              "type": "NAME",
+              "value": "Selected for Development"
+            }
+          ],
+          "toStatus": [
+            {
+              "type": "NAME",
+              "value": "In Progress"
+            },
+            {
+              "type": "NAME",
+              "value": "In Review"
+            }
+          ]
+        },
+        "children": [],
+        "conditions": [],
+        "connectionId": null
+      },
+      "components": [
+        {
+          "id": "377167357",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 3,
+          "type": "jira.issue.condition",
+          "value": {
+            "selectedField": {
+              "type": "ID",
+              "value": "issuetype"
+            },
+            "selectedFieldType": "issuetype",
+            "comparison": "ONE_OF",
+            "compareValue": {
+              "type": "ID",
+              "modifier": null,
+              "value": "[\"3\",\"10001\",\"1\",\"5\",\"10100\"]",
+              "multiValue": true,
+              "source": null
+            }
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        },
+        {
+          "id": "377167358",
+          "component": "ACTION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 10,
+          "type": "jira.issue.edit",
+          "value": {
+            "operations": [
+              {
+                "field": {
+                  "type": "NAME",
+                  "value": "Start date"
+                },
+                "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:datepicker",
+                "type": "SET",
+                "value": "{{now.jiraDate}}"
+              }
+            ],
+            "advancedFields": null,
+            "sendNotifications": false
+          },
+          "children": [],
+          "conditions": [],
+          "connectionId": null
+        }
+      ],
+      "canOtherRuleTrigger": true,
+      "notifyOnError": "FIRSTERROR",
+      "projects": [],
+      "labels": [],
+      "tags": [
+        {
+          "id": 53710971,
+          "tagType": "IS_RULE_UPDATED",
+          "tagValue": "true"
+        }
+      ],
+      "ruleScope": {
+        "resources": [
+          "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        ]
+      },
+      "ruleHome": {
+        "ruleLifecycleHome": {
+          "locationARI": "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        },
+        "ruleBillingHome": {
+          "locationARI": "ari:cloud:jira-software::site/75b61526-edee-42e5-a80e-b1e0a2a4a67e"
+        }
+      },
+      "writeAccessType": "UNRESTRICTED",
+      "collaborators": [],
+      "billingType": "NORMAL"
+    }
+  ]
+}

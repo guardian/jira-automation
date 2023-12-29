@@ -1,0 +1,277 @@
+{
+  "cloud": true,
+  "rules": [
+    {
+      "id": 15759737,
+      "clientKey": "jira:a7d102c1-a7cf-4320-85c3-ee90bfc62f47",
+      "name": "Add Due Date",
+      "state": "ENABLED",
+      "description": "We should set the due date for future items as a prediction for when it will be completed (ie. no longer need to work on it, as it's merged), but when we actually complete the task, this automation will set the due date to reflect when that happened",
+      "authorAccountId": "63441e6894b0b26083062e6c",
+      "actor": {
+        "type": "ACCOUNT_ID",
+        "value": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+      },
+      "created": 1698270477803,
+      "updated": 1703851990276,
+      "trigger": {
+        "id": "377167409",
+        "component": "TRIGGER",
+        "parentId": null,
+        "conditionParentId": null,
+        "schemaVersion": 1,
+        "type": "jira.issue.event.trigger:transitioned",
+        "value": {
+          "eventKey": "jira:issue_updated",
+          "issueEvent": "issue_generic",
+          "fromStatus": [
+            {
+              "type": "NAME",
+              "value": "In Review"
+            },
+            {
+              "type": "NAME",
+              "value": "In Progress"
+            },
+            {
+              "type": "NAME",
+              "value": "BUGS"
+            },
+            {
+              "type": "NAME",
+              "value": "Blocked"
+            },
+            {
+              "type": "NAME",
+              "value": "Selected for Development"
+            },
+            {
+              "type": "NAME",
+              "value": "Backlog"
+            }
+          ],
+          "toStatus": [
+            {
+              "type": "NAME",
+              "value": "Done"
+            }
+          ]
+        },
+        "children": [],
+        "conditions": [],
+        "connectionId": null
+      },
+      "components": [
+        {
+          "id": "377167410",
+          "component": "CONDITION",
+          "parentId": null,
+          "conditionParentId": null,
+          "schemaVersion": 1,
+          "type": "jira.condition.container.block",
+          "value": null,
+          "children": [
+            {
+              "id": "377167411",
+              "component": "CONDITION_BLOCK",
+              "parentId": "377167410",
+              "conditionParentId": null,
+              "schemaVersion": 1,
+              "type": "jira.condition.if.block",
+              "value": {
+                "conditionMatchType": "ALL"
+              },
+              "children": [
+                {
+                  "id": "377167415",
+                  "component": "ACTION",
+                  "parentId": "377167411",
+                  "conditionParentId": null,
+                  "schemaVersion": 1,
+                  "type": "codebarrel.action.log",
+                  "value": "Due date is already today, don't need to change it, but do need to update Business Days Duration",
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                },
+                {
+                  "id": "377167416",
+                  "component": "ACTION",
+                  "parentId": "377167411",
+                  "conditionParentId": null,
+                  "schemaVersion": 10,
+                  "type": "jira.issue.edit",
+                  "value": {
+                    "operations": [
+                      {
+                        "field": {
+                          "type": "NAME",
+                          "value": "Business Days Duration"
+                        },
+                        "fieldType": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                        "type": "SET",
+                        "value": "{{issue.\"Start date\".diff(issue.duedate).businessDays}}"
+                      }
+                    ],
+                    "advancedFields": null,
+                    "sendNotifications": true
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                }
+              ],
+              "conditions": [
+                {
+                  "id": "377167412",
+                  "component": "CONDITION",
+                  "parentId": null,
+                  "conditionParentId": "377167411",
+                  "schemaVersion": 3,
+                  "type": "jira.issue.condition",
+                  "value": {
+                    "selectedField": {
+                      "type": "ID",
+                      "value": "duedate"
+                    },
+                    "selectedFieldType": "duedate",
+                    "comparison": "EQUALS",
+                    "compareValue": {
+                      "type": "VALUE",
+                      "modifier": null,
+                      "value": "{\"type\":\"NOW\"}",
+                      "multiValue": false,
+                      "source": null
+                    }
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                },
+                {
+                  "id": "377167413",
+                  "component": "CONDITION",
+                  "parentId": null,
+                  "conditionParentId": "377167411",
+                  "schemaVersion": 3,
+                  "type": "jira.issue.condition",
+                  "value": {
+                    "selectedField": {
+                      "type": "NAME",
+                      "value": "Start date"
+                    },
+                    "selectedFieldType": "com.atlassian.jira.plugin.system.customfieldtypes:datepicker",
+                    "comparison": "NOT_EMPTY",
+                    "compareValue": null
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                },
+                {
+                  "id": "377167414",
+                  "component": "CONDITION",
+                  "parentId": null,
+                  "conditionParentId": "377167411",
+                  "schemaVersion": 1,
+                  "type": "jira.comparator.condition",
+                  "value": {
+                    "first": "{{issue.Start date.jiraDate}}",
+                    "second": "{{issue.Due date.plusDays(1).jiraDate}}",
+                    "operator": "LESS_THAN"
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                }
+              ],
+              "connectionId": null
+            },
+            {
+              "id": "377167417",
+              "component": "CONDITION_BLOCK",
+              "parentId": "377167410",
+              "conditionParentId": null,
+              "schemaVersion": 1,
+              "type": "jira.condition.if.block",
+              "value": {
+                "conditionMatchType": "ALL"
+              },
+              "children": [
+                {
+                  "id": "377167418",
+                  "component": "ACTION",
+                  "parentId": "377167417",
+                  "conditionParentId": null,
+                  "schemaVersion": 1,
+                  "type": "codebarrel.action.log",
+                  "value": "Updating the due date to today",
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                },
+                {
+                  "id": "377167419",
+                  "component": "ACTION",
+                  "parentId": "377167417",
+                  "conditionParentId": null,
+                  "schemaVersion": 10,
+                  "type": "jira.issue.edit",
+                  "value": {
+                    "operations": [
+                      {
+                        "field": {
+                          "type": "ID",
+                          "value": "duedate"
+                        },
+                        "fieldType": "duedate",
+                        "type": "SET",
+                        "value": "{{now.jiraDate}}"
+                      }
+                    ],
+                    "advancedFields": null,
+                    "sendNotifications": true
+                  },
+                  "children": [],
+                  "conditions": [],
+                  "connectionId": null
+                }
+              ],
+              "conditions": [],
+              "connectionId": null
+            }
+          ],
+          "conditions": [],
+          "connectionId": null
+        }
+      ],
+      "canOtherRuleTrigger": true,
+      "notifyOnError": "FIRSTERROR",
+      "projects": [],
+      "labels": [],
+      "tags": [
+        {
+          "id": 53710975,
+          "tagType": "IS_RULE_UPDATED",
+          "tagValue": "true"
+        }
+      ],
+      "ruleScope": {
+        "resources": [
+          "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        ]
+      },
+      "ruleHome": {
+        "ruleLifecycleHome": {
+          "locationARI": "ari:cloud:jira:75b61526-edee-42e5-a80e-b1e0a2a4a67e:project/11307"
+        },
+        "ruleBillingHome": {
+          "locationARI": "ari:cloud:jira-software::site/75b61526-edee-42e5-a80e-b1e0a2a4a67e"
+        }
+      },
+      "writeAccessType": "UNRESTRICTED",
+      "collaborators": [],
+      "billingType": "NORMAL"
+    }
+  ]
+}
